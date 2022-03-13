@@ -8,7 +8,8 @@
 #include <X11/Xcms.h>
 #include <X11/Xutil.h>
 
-int main()
+
+int show_test()
 {
     /* Xlib */
     Display *display = XOpenDisplay(getenv("DISPLAY"));

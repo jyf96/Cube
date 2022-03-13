@@ -1,3 +1,4 @@
-add_executable(myX11 myX11.cpp cube.cpp)
+add_executable(myWindow main.cpp show.cpp cube.cpp)
 # pkg-config --cflags --libs x11
-target_link_libraries(myX11 X11)
+include_directories(/usr/include/eigen3)
+target_link_libraries(myWindow X11)

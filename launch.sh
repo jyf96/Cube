@@ -1,4 +1,4 @@
 mkdir build
 cd build
 cmake ../
-make && ./bin/myX11
+make && ./bin/myWindow
