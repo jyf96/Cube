@@ -4,6 +4,9 @@ SET(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_STANDARD 20)
 
 include_directories(src)
+include_directories(lib/googletest/googletest/include)
+include_directories(lib/googletest/googlemock/include)
 
 add_subdirectory(src bin)
-add_subdirectory(lib/googletest test)
+add_subdirectory(lib/googletest)
+add_subdirectory(test test)
