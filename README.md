@@ -1,4 +1,13 @@
 # 这是一篇关于X11学习的记录
+cd lib 
+git clone https://github.com/google/googletest.git
+cd ..
+mkdir build
+cd build
+cmake ..
+make
+
+
 官网网址
 https://www.x.org/
 
