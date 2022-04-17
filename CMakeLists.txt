@@ -8,5 +8,5 @@ include_directories(lib/googletest/googletest/include)
 include_directories(lib/googletest/googlemock/include)
 
 add_subdirectory(src bin)
-add_subdirectory(lib/googletest gtest)
-add_subdirectory(test test)
+# add_subdirectory(lib/googletest gtest)
+# add_subdirectory(test test)

@@ -1,22 +1,6 @@
-#include <Eigen/Core>
-#include <Eigen/LU>
 #include <iostream>
-using namespace Eigen;
-using namespace std;
+#include "cube.h"
 
-#define Dimension 3
-typedef Matrix<double,1,Dimension> Point;
-typedef Matrix<double,1,Dimension> Vector;
-struct Line{
-    Point start;
-    Point end;
-};
-struct plane{
-    Point pointList[3];
-};
-class Cube {
-    Point apex[2][2][2];
-};
 int cube_test()
 {
     Matrix<double,2,2> a;

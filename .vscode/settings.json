@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.tcc": "cpp",
-        "lu": "cpp"
+        "lu": "cpp",
+        "core": "cpp"
     }
 }
