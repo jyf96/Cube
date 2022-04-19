@@ -43,72 +43,82 @@ MyWindow::~MyWindow()
         XCloseDisplay(display);
     }
 }
-int MyWindow::Loop()
+// int MyWindow::Loop()
+// {
+//     XEvent event;
+//     while (true)
+//     {
+//         XNextEvent(display, &event);
+//         printf("event.type = %d\n",event.type);
+//         switch (event.type)
+//         {
+            
+//         case KeyPress:
+//         {
+//             KeySym keysym;
+//             char Buff[20] = {0};
+//             int CharaterNums = 0;
+//             CharaterNums = XLookupString(&(event.xkey), Buff, 20, &keysym, (XComposeStatus *)nullptr);
+//             if (CharaterNums != 0)
+//             {
+//                 for (int i = 0; i < CharaterNums; i++)
+//                 {
+//                     printf("text[%d]=%x %c\n", i, Buff[i], Buff[i]);
+//                 }
+
+//                 if (keysym == XK_q)
+//                 {
+//                     printf("press %c,exit!\n", 'q');
+//                     return RET_OK;
+//                 }
+//             }
+//             break;
+//         }
+//         //鼠标按键
+//         case ButtonPress:
+//         {
+//             printf("ButtonPress :\n");
+//             unsigned int x = event.xbutton.x;
+//             unsigned int y = event.xbutton.y;
+//             int button = event.xbutton.button;
+//             printf("x = %d,y=%d,button=%d\n", x, y, button);
+//             switch (button)
+//             {
+//                 case 1: {  //鼠标左键
+//                     // XDrawRectangle(display,window,gc,x-10,y-10,20,20);
+//                     //XFillRectangle(display, window, gc, x - 10, y - 10, 20, 20);
+//                     break;
+//                 }
+//                 case 3: {  //鼠标右键
+//                     // XChangeGC(display, gc, GCForeground, &gcValue);
+//                     // XFillRectangle(display, window, gc, 0, 0, width, height);
+//                     break;
+//                 }
+//                 default:
+//                     break;
+//             }
+//             break;
+//         }
+
+//         default:
+//             break;
+//         }
+//     }
+    
+// }
+Display *g_display;
+void *Loop(void * arg)
 {
     XEvent event;
     while (true)
     {
-        XNextEvent(display, &event);
-        printf("event.type = %d\n",event.type);
-        switch (event.type)
-        {
-            
-        case KeyPress:
-        {
-            KeySym keysym;
-            char Buff[20] = {0};
-            int CharaterNums = 0;
-            CharaterNums = XLookupString(&(event.xkey), Buff, 20, &keysym, (XComposeStatus *)nullptr);
-            if (CharaterNums != 0)
-            {
-                for (int i = 0; i < CharaterNums; i++)
-                {
-                    printf("text[%d]=%x %c\n", i, Buff[i], Buff[i]);
-                }
-
-                if (keysym == XK_q)
-                {
-                    printf("press %c,exit!\n", 'q');
-                    return RET_OK;
-                }
-            }
-            break;
-        }
-        //鼠标按键
-        case ButtonPress:
-        {
-            printf("ButtonPress :\n");
-            unsigned int x = event.xbutton.x;
-            unsigned int y = event.xbutton.y;
-            int button = event.xbutton.button;
-            printf("x = %d,y=%d,button=%d\n", x, y, button);
-            switch (button)
-            {
-                case 1: {  //鼠标左键
-                    // XDrawRectangle(display,window,gc,x-10,y-10,20,20);
-                    //XFillRectangle(display, window, gc, x - 10, y - 10, 20, 20);
-                    break;
-                }
-                case 3: {  //鼠标右键
-                    // XChangeGC(display, gc, GCForeground, &gcValue);
-                    // XFillRectangle(display, window, gc, 0, 0, width, height);
-                    break;
-                }
-                default:
-                    break;
-            }
-            break;
-        }
-
-        default:
-            break;
-        }
+        XNextEvent(*((Display **)arg), &event);
     }
-    
 }
 int MyWindow::Listen()
 {
-    auto ret = pthread_create(&msgListen,nullptr,Loop,nullptr);
+    pthread_t p_listen;
+    auto ret = pthread_create(&p_listen,nullptr,Loop,&g_display);
     if(ret != RET_OK) {
         return ret;
     }
