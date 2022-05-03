@@ -1,9 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <ctime>
-#include <iostream>
-#include <sys/time.h>
+#include "../include/type.h"
 #include "agent.h"
 int MyWindow::Init()
 {
@@ -31,6 +29,8 @@ int MyWindow::Init()
     gcValue.foreground = 0x000000;
     foregroundGc = XCreateGC(display, window, GCForeground, &gcValue);
     XSelectInput(display, window, KeyPressMask | ButtonPressMask);
+
+    (void)pthread_mutex_init(&lock,nullptr);
     return RET_OK;
 }
 MyWindow::~MyWindow()
@@ -43,10 +43,12 @@ MyWindow::~MyWindow()
 }
 void MyWindow::InternalThreadEntry()
 {
+    bool flag = true;
     XEvent event;
-    while (true)
+    while (flag)
     {
         XNextEvent(display, &event);
+        pthread_mutex_lock(&lock);
         printf("event.type = %d\n", event.type);
         switch (event.type)
         {
@@ -67,7 +69,7 @@ void MyWindow::InternalThreadEntry()
                 if (keysym == XK_q)
                 {
                     printf("press %c,exit!\n", 'q');
-                    return;
+                    flag = false;
                 }
             }
             break;
@@ -103,5 +105,13 @@ void MyWindow::InternalThreadEntry()
         default:
             break;
         }
+        pthread_mutex_unlock(&lock);
     }
+}
+void MyWindow::DrawCircle(int x1,int y1,int x2,int y2)
+{
+    pthread_mutex_lock(&lock);
+    printf("x1 = %d,y1 = %d,x2 = %d,y2 = %d\n",x1,y1,x2,y2);
+    XDrawLine(display,window,foregroundGc,x1,y1,x2,y2);
+    pthread_mutex_unlock(&lock);
 }

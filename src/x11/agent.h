@@ -4,11 +4,6 @@
 #include <X11/Xutil.h>
 #include "../include/mythread.h"
 
-enum {
-    RET_ERR = -1,
-    RET_OK = 0
-}E_ERROR;
-
 class MyWindow : public MyThreadClass {
     private:
     Display *display = nullptr;
@@ -16,10 +11,12 @@ class MyWindow : public MyThreadClass {
     const int height = 0;
     Window window;
     GC backgroundGc,foregroundGc;
+    pthread_mutex_t lock;
 
     public:
     MyWindow(int _width,int _height): width(_width),height(_height){};
     ~MyWindow();
     int Init();
     void InternalThreadEntry() override;
+    void DrawCircle(int x1,int y1,int x2,int y2);
 };

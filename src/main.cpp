@@ -1,5 +1,7 @@
+#include "include/type.h"
 #include "include/mythread.h"
 #include "x11/agent.h"
+#include "usr/usr.h"
 using namespace std;
 int main()
 {
@@ -9,6 +11,10 @@ int main()
         return ret;
     }
     myWindow->StartInternalThread();
+    MyUsr *usr = new MyUsr(myWindow);
+    usr->StartInternalThread();
+    usr->WaitForInternalThreadToExit();
+    delete(usr);
     myWindow->WaitForInternalThreadToExit();
     delete(myWindow);
     return RET_OK;
