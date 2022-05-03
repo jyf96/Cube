@@ -2,14 +2,14 @@
 #include <X11/Xlib.h>
 #include <X11/Xcms.h>
 #include <X11/Xutil.h>
-#include <queue>
+#include "../include/mythread.h"
 
 enum {
     RET_ERR = -1,
     RET_OK = 0
 }E_ERROR;
 
-class MyWindow{
+class MyWindow : public MyThreadClass {
     private:
     Display *display = nullptr;
     const int width = 0;
@@ -21,5 +21,5 @@ class MyWindow{
     MyWindow(int _width,int _height): width(_width),height(_height){};
     ~MyWindow();
     int Init();
-    int Listen();
+    void InternalThreadEntry() override;
 };

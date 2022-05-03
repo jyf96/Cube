@@ -1,12 +1,10 @@
-set(BINARY ${CMAKE_PROJECT_NAME}_run)
+set(BINARY launch)
 
-file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
-
-set(SOURCES ${SOURCES})
+add_subdirectory(x11)
+# include_directories(/usr/include/eigen3)
 
 # pkg-config --cflags --libs x11
-add_executable(${BINARY} ${SOURCES})
-include_directories(/usr/include/eigen3)
-target_link_libraries(${BINARY} X11)
+add_executable(${BINARY} main.cpp)
 target_link_libraries(${BINARY} pthread)
+target_link_libraries(${BINARY} agentx11)
 # add_library(${CMAKE_PROJECT_NAME}_lib STATIC ${SOURCES})

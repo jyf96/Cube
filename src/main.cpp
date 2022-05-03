@@ -1,44 +1,15 @@
-#include "show.h"
-#include <pthread.h>
-#include <iostream>
-#include <string>
-#include <queue>
+#include "include/mythread.h"
+#include "x11/agent.h"
 using namespace std;
-typedef enum{
-    EVENT_TYPE_OF_SHOW,
-    EVENT_TYPE_OF_USR
-}EVENT_TYPE;
-struct Event{
-    EVENT_TYPE type;
-    union{
-        XEvent xEvent;
-    }data;
-};
-void *MyUsrRun(void *)
-{
-    while (true)
-    {
-        string s;
-        cin >> s;
-        cout << "you input " << s << endl;
-    }
-}
 int main()
 {
-    queue<Event> eventQueue;
-    pthread_t p_usr;
-    int ret;
-    ret = pthread_create(&p_usr,nullptr,MyUsrRun,nullptr);
+    MyWindow *myWindow = new MyWindow(800,600);
+    auto ret = myWindow->Init();
     if(ret != RET_OK) {
         return ret;
     }
-    MyWindow myWindow = MyWindow(800,600);
-    ret = myWindow.Init();
-    if(ret != RET_OK) {
-        return ret;
-    }
-    while(true) {
-
-    }
+    myWindow->StartInternalThread();
+    myWindow->WaitForInternalThreadToExit();
+    delete(myWindow);
     return RET_OK;
 }
