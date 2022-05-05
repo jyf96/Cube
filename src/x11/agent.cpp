@@ -108,10 +108,11 @@ void MyWindow::InternalThreadEntry()
         pthread_mutex_unlock(&lock);
     }
 }
-void MyWindow::DrawCircle(int x1,int y1,int x2,int y2)
+void MyWindow::DrawLine(int x1,int y1,int x2,int y2)
 {
     pthread_mutex_lock(&lock);
     printf("x1 = %d,y1 = %d,x2 = %d,y2 = %d\n",x1,y1,x2,y2);
     XDrawLine(display,window,foregroundGc,x1,y1,x2,y2);
+    XFlush(display);  /* 显式同步给server */
     pthread_mutex_unlock(&lock);
 }

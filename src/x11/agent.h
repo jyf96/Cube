@@ -18,5 +18,5 @@ class MyWindow : public MyThreadClass {
     ~MyWindow();
     int Init();
     void InternalThreadEntry() override;
-    void DrawCircle(int x1,int y1,int x2,int y2);
+    void DrawLine(int x1,int y1,int x2,int y2);
 };

@@ -1,21 +1,20 @@
 #pragma once
-
-#include <Eigen/Core>
-#include <Eigen/LU>
-
-using namespace Eigen;
-using namespace std;
+#include "../x11/agent.h"
 #define Dimension 3
-typedef Matrix<double,1,Dimension> Point;
-typedef Matrix<double,1,Dimension> Vector;
-struct Line{
-    Point start;
-    Point end;
+class Point{
+    public:
+    double x;
+    double y;
+    double z;
+    Point(double x,double y,double z) : x(x),y(y),z(z){};
+    ~Point() = default;
+    int ConvertToDimemsion2(double &screanX,double &screanY);
 };
-struct plane{
-    Point pointList[3];
+class  Cube{
+    public:
+    double size;
+    Point *points[2][2][2];
+    Cube(double size);
+    ~Cube();
+    int Show(MyWindow *myWindow);
 };
-class Cube {
-    Point apex[2][2][2];
-};
-int cube_test();
