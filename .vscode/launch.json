@@ -8,25 +8,10 @@
             "name": "(gdb) 启动",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/myWindow",
-            "cwd": ".",
-            "args": [],
-            "stopAtEntry": false,
-            "environment": [],
-            "externalConsole": false,
+            "program": "${workspaceFolder}/build/bin/launch",
+            "cwd":"${workspaceFolder}/build/bin",
             "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "为 gdb 启用整齐打印",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "将反汇编风格设置为 Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ]
+            "preLaunchTask":"Make"
         }
     ]
 }

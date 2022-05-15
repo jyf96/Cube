@@ -2,53 +2,45 @@
 #include "cube.h"
 #include "../include/type.h"
 
-int Point::ConvertToDimemsion2(double &screanX,double &screanY)
+PointShow Point::ConvertToDimemsion2(Point &view)
 {
-    /*
-        总共三个对象，一个是观察的眼睛，一个是电脑屏幕，还有一个是观察对象
-        观察的眼睛就是一个点，观察对象也是一个点，我们需要求出眼睛和观察对象连线和电脑屏幕的交点
-        长度单位用像素间距表示，屏幕像素为1920 * 1080    1920像素对应实际长度约300mm
-        为方便处理，不妨设电脑屏幕 为 z = 0 (0<=x<1920 0<=y<1080   左上角为原点)
-        人眼距离电脑屏幕约40cm 换算成像素点约2400
-        则人眼坐标定为 (960,540,2400)
-        观察对象坐标原点，暂定放在屏幕左下角，距离屏幕约20cm,则坐标为(0,1080,-1200)，
-    */
-   const Point view(800,0,1200);
-   screanX = (x * view.z - view.x * z) / (view.z-z);
-   screanY = (y * view.z - view.y * z) / (view.z-z);
-   return RET_OK;
+    double show_x = (x * view.z - view.x * z) / (view.z-z);
+    double show_y = (y * view.z - view.y * z) / (view.z-z);
+    return PointShow(show_x, show_y);
 }
-Cube::Cube(double size = 100) : size(size)
+void Cube::CreateShowPoint()
 {
     for(int i=0;i<2;i++)
     for(int j=0;j<2;j++)
-    for(int k=0;k<2;k++) {
-        points[i][j][k] = new Point(0+i*size,500-size*j,-600+k*size);
+    for(int k=0;k<2;k++)
+    {
+        pointShows[i][j][k] = Point(base.x+i*size,base.y+j*size,base.z+k*size).ConvertToDimemsion2(view);
     }
 }
-Cube::~Cube()
+Cube::Cube(double size = 100) : size(size),
+    view(Point(800, 400, 2000)),base(Point(0,0,-size))
 {
-    for(int i=0;i<2;i++)
-    for(int j=0;j<2;j++)
-    for(int k=0;k<2;k++) {
-        delete(points[i][j][k]);
-    }
+    CreateShowPoint();
 }
 int Cube::Show(MyWindow *myWindow)
 {
     for(int i=0;i<2;i++)
     for(int j=0;j<2;j++)
     {
-        double x1,y1,x2,y2;
-        points[i][j][0]->ConvertToDimemsion2(x1,y1);
-        points[i][j][1]->ConvertToDimemsion2(x2,y2);
-        myWindow->DrawLine((int)x1,(int)y1,(int)x2,(int)y2);
-        points[i][0][j]->ConvertToDimemsion2(x1,y1);
-        points[i][1][j]->ConvertToDimemsion2(x2,y2);
-        myWindow->DrawLine((int)x1,(int)y1,(int)x2,(int)y2);
-        points[0][j][i]->ConvertToDimemsion2(x1,y1);
-        points[1][j][i]->ConvertToDimemsion2(x2,y2);
-        myWindow->DrawLine((int)x1,(int)y1,(int)x2,(int)y2);
+        myWindow->DrawLine(pointShows[i][j][0].x,pointShows[i][j][0].y,
+            pointShows[i][j][1].x,pointShows[i][j][1].y);
+        myWindow->DrawLine(pointShows[i][0][j].x,pointShows[i][0][j].y,
+            pointShows[i][1][j].x,pointShows[i][1][j].y);
+        myWindow->DrawLine(pointShows[0][i][j].x,pointShows[0][i][j].y,
+            pointShows[1][i][j].x,pointShows[1][i][j].y);
     }
+    return RET_OK;
+}
+int Cube::Move(double move_x,double move_y,double move_z)
+{
+    base.x += move_x;
+    base.y += move_y;
+    base.z += move_z;
+    CreateShowPoint();
     return RET_OK;
 }
