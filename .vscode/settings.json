@@ -69,22 +69,7 @@
         "**/.classpath": true,
         "**/.project": true,
         "**/.settings": true,
-        "**/.factorypath": true,
-        "test": true,
-        "lib": true,
-        "build": true,
-        "CMakeLists.txt": true,
-        "README.md": true,
-        ".gitignore": true,
-        ".vscode": true
+        "**/.factorypath": true
     },
-    "hide-files.files": [
-        "test",
-        "lib",
-        "build",
-        "CMakeLists.txt",
-        "README.md",
-        ".gitignore",
-        ".vscode"
-    ]
+    "hide-files.files": []
 }

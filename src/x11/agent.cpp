@@ -81,7 +81,7 @@ void MyWindow::InternalThreadEntry()
                 }
                 
                 default:{
-                    printf("keysym is 0x%x\n", keysym);
+                    printf("keysym is 0x%lx\n", keysym);
                 }
             }
             if (CharaterNums != 0)
