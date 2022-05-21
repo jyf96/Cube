@@ -15,7 +15,7 @@ https://www.x.org/
 https://www.x.org/wiki/guide/concepts/
 
 本地下载vcxsrv  https://sourceforge.net/projects/vcxsrv/ ,安装X windows 服务器
-服务器安装x11  apt install libX11-dev
+服务器安装x11  apt install libx11-dev
 
 Host server_ip
   HostName server_ip
