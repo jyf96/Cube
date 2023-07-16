@@ -1,4 +1,9 @@
 # 这是一篇关于X11学习的记录
+
+option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
+option(GLFW_INSTALL "Generate installation target" OFF)
+
+
 cd lib
 git clone https://github.com/google/googletest.git
 cd ..
@@ -29,3 +34,4 @@ Host server_ip
 
 ssh -Y user_name@server_ip
 xclock
+
