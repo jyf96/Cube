@@ -4,47 +4,82 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Cmake",
+            "label": "cmake build",
             "type": "shell",
-            "command": "cmake ..",
+            "command": "cmake",
+            "args": [
+                "-S",
+                ".",
+                "-B",
+                "build",
+                "-G",
+                "'MinGW Makefiles'"
+            ],
             "group": {
                 "kind": "build",
                 "isDefault": false
             },
             "options": {
-                "cwd": "${workspaceFolder}/build/"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"
             ]
         },
         {
-            "label": "Make",
+            "label": "make build",
             "type": "shell",
-            "command": "make",
-            "options": {
-                "cwd": "${workspaceFolder}/build/"
-            },
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build"
+            ],
             "group": {
                 "kind": "build",
-                "isDefault": true
+                "isDefault": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "dependsOn":"cmake build"
+        },
+        {
+            "label": "make install",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--install",
+                "build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "dependsOn":"make build"
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "rm build; rm bin;",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"
             ]
         },
-        {
-            "label": "Clean",
-            "type": "shell",
-            "command": "rm -rf *",
-            "options": {
-                "cwd": "${workspaceFolder}/build/"
-            },
-            "group": {
-                "kind": "none",
-                "isDefault": true
-            },
-            "problemMatcher": []
-        }
     ]
 }
