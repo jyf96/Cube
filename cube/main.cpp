@@ -1,8 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <shader_s.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include <shader_s.hpp>
 
 #include <iostream>
 
@@ -48,21 +46,25 @@ int main()
 
     // build and compile our shader program
     // ------------------------------------
-    Shader ourShader("shader/texture.vs", "shader/texture.fs"); // you can name your shader files however you like
+    Shader ourShader("shader/shader.vs", "shader/shader.fs"); // you can name your shader files however you like
+    ourShader.use();
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-    float vertices[] = {
-        // positions          // colors           // texture coords
-         0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-         0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+    GLfloat vertices[] = {
+        // positions          // colors       
+         0.5f,  0.5f, 0.5f,   1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, 0.5f,   0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f,   0.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f, 0.5f,   1.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f
     };
 
-    unsigned int indices[] = {  
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
+    GLshort indices[] = {
+        3,2,0,1,4,5,7,6,3,2,
     };
 
     unsigned int VBO, VAO, EBO;
@@ -80,43 +82,11 @@ int main()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-
-    // texture coord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    // load and create a texture 
-    // -------------------------
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-    // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // load image, create texture and generate mipmaps
-    int width, height, nrChannels;
-    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char *data = stbi_load("textures/container.jpg", &width, &height, &nrChannels, 0);
-    
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
-
 
     // render loop
     // -----------
@@ -132,9 +102,8 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // render the triangle
-        ourShader.use();
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLE_STRIP, 10, GL_UNSIGNED_SHORT, nullptr);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -157,8 +126,9 @@ int main()
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

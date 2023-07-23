@@ -10,6 +10,7 @@
             "args": [
                 "-S",
                 ".",
+                "-DCMAKE_BUILD_TYPE=Debug",
                 "-B",
                 "build",
                 "-G",

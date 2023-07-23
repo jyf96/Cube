@@ -1,5 +1,4 @@
-#ifndef SHADER_H
-#define SHADER_H
+#pragma once
 
 #include <glad/glad.h>
 
@@ -88,7 +87,7 @@ public:
     // ------------------------------------------------------------------------
     void setFloat(const std::string &name, float value) const
     { 
-        glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
+        glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
 
 private:
@@ -118,4 +117,3 @@ private:
         }
     }
 };
-#endif
