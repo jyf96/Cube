@@ -14,14 +14,6 @@ enum Camera_Movement {
     RIGHT
 };
 
-// Default camera values
-const float YAW         = -90.0f;
-const float PITCH       =  0.0f;
-const float SPEED       =  2.5f;
-const float SENSITIVITY =  0.1f;
-const float ZOOM        =  45.0f;
-
-
 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
@@ -31,34 +23,21 @@ public:
     glm::vec3 Front;
     glm::vec3 Up;
     glm::vec3 Right;
-    glm::vec3 WorldUp;
+    const glm::vec3 WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     // euler Angles
-    float Yaw;
-    float Pitch;
+    float Yaw = -90.0f;
+    float Pitch = 0.0f;
     // camera options
-    float MovementSpeed;
-    float MouseSensitivity;
-    float Zoom;
+    const float MovementSpeed = 2.5f;
+    const float MouseSensitivity = 0.1f;
+    float Zoom = 45.0f;
 
     // constructor with vectors
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
+    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 front = glm::vec3(0.0f, 0.0f, -3.0f)):
+        Position(position), Front(front)
     {
-        Position = position;
-        WorldUp = up;
-        Yaw = yaw;
-        Pitch = pitch;
         updateCameraVectors();
     }
-    // constructor with scalar values
-    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
-    {
-        Position = glm::vec3(posX, posY, posZ);
-        WorldUp = glm::vec3(upX, upY, upZ);
-        Yaw = yaw;
-        Pitch = pitch;
-        updateCameraVectors();
-    }
-
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
     glm::mat4 GetViewMatrix()
     {
@@ -115,6 +94,8 @@ private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors()
     {
+        glm::quat rot = glm::angleAxis(glm::radians(90.f), glm::vec3(0.0f, 1.0f, 0.0f));
+
         // calculate the new Front vector
         glm::vec3 front;
         front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));

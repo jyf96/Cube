@@ -23,9 +23,6 @@ const unsigned int SCR_HEIGHT = 600;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-float lastX = SCR_WIDTH / 2.0f;
-float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
 
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -71,10 +68,13 @@ int main()
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
+    // 锁定鼠标视角
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     // build and compile our shader zprogram
     // ------------------------------------
-    Shader ourShader("shader/shader.vs", "shader/shader.fs");
-    ourShader.use();
+    Shader shader("shader/shader.vs", "shader/shader.fs");
+    shader.use();
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
@@ -151,12 +151,12 @@ int main()
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
 
-    Texture texture1 = Texture("textures/container.jpg");
+    Texture texture1 = Texture("textures/container.jpg", GL_TEXTURE0);
     Texture texture2 = Texture("textures/awesomeface.png", GL_TEXTURE1);
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
-    ourShader.setInt("texture1", texture1.GetTextureUnit());
-    ourShader.setInt("texture2", texture2.GetTextureUnit());
+    shader.setInt("texture1", texture1.GetTextureUnit());
+    shader.setInt("texture2", texture2.GetTextureUnit());
 
 
     // render loop
@@ -183,15 +183,15 @@ int main()
         texture2.bindUnit();
 
         // activate shader
-        ourShader.use();
+        shader.use();
 
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        ourShader.setMat4("projection", projection);
+        shader.setMat4("projection", projection);
 
         // camera/view transformation
         glm::mat4 view = camera.GetViewMatrix();
-        ourShader.setMat4("view", view);
+        shader.setMat4("view", view);
 
         // render boxes
         glBindVertexArray(VAO);
@@ -202,7 +202,7 @@ int main()
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            ourShader.setMat4("model", model);
+            shader.setMat4("model", model);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
@@ -257,20 +257,11 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
-    if (firstMouse)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
+    static float lastX = xpos;
+    static float lastY = ypos;
+    camera.ProcessMouseMovement(xpos - lastX, lastY - ypos);
     lastX = xpos;
     lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
