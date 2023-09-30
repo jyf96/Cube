@@ -58,12 +58,16 @@ private:
     unsigned int GetFileFormat(const char *filePath)
     {
         char *suffix = strchr(filePath, '.');
-        if (suffix == nullptr) {
+        if (suffix == nullptr)
+        {
             return ~0;
         }
-        if (memcmp(suffix, ".jpg", strlen(".jpg")) == 0) {
+        if (memcmp(suffix, ".jpg", strlen(".jpg")) == 0)
+        {
             return GL_RGB;
-        } else {
+        }
+        else
+        {
             return GL_RGBA;
         }
     }
