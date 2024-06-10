@@ -1,0 +1,4 @@
+add_subdirectory(glad)
+add_subdirectory(glfw)
+install(TARGETS glfw DESTINATION bin)
+add_subdirectory(glm)
