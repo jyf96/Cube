@@ -57,7 +57,7 @@ public:
 private:
     unsigned int GetFileFormat(const char *filePath)
     {
-        char *suffix = strchr(filePath, '.');
+        auto *suffix = strchr(filePath, '.');
         if (suffix == nullptr)
         {
             return ~0;
