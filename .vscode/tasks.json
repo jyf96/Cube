@@ -14,7 +14,7 @@
                 "-B",
                 "build",
                 "-G",
-                "'MinGW Makefiles'"
+                "'Visual Studio 17 2022'"
             ],
             "group": {
                 "kind": "build",
@@ -53,7 +53,9 @@
             "command": "cmake",
             "args": [
                 "--install",
-                "build"
+                "build",
+                "--config",
+                "Debug"
             ],
             "group": {
                 "kind": "build",
